@@ -76,7 +76,7 @@ export default function PictureCards() {
                             </div>
                         </animated.div>
                     ) : (
-                        <animated.div style={data ? propsFadeOut : null}>
+                        <animated.div style={loading && data ? propsFadeOut : null}>
                             <div
                                 className={'wrapper'}
                                 style={{ display: 'flex' }}
