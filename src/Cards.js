@@ -1,5 +1,5 @@
 import { React, useEffect } from 'react';
-import { useQuery, gql, useLazyQuery } from '@apollo/client';
+import { useLazyQuery, gql } from '@apollo/client';
 import { Link, useLocation } from 'react-router-dom';
 import {
     useSpring,
@@ -7,17 +7,16 @@ import {
 } from 'react-spring';
 
 export default function Cards(cardsData) {
-    // console.log(cardsData)
-    //access location object
+    //get the location/path/url
     const location = useLocation();
 
-    //access the slugs in the pathname
+    //get the slugs fromthe url
     const urlSlug = location.pathname.split('/')[2];
 
-    // split the string into an array of strings
+    // split the slugs into an array of strings
     const slugs = urlSlug.split(',');
 
-    //create dynamic query which reads from pathname
+    //graphql query for Cards
     const CARDS_QUERY = gql`
   query cards ($slugs: [String!]) {
     cards(slugs: $slugs) {
@@ -43,7 +42,7 @@ export default function Cards(cardsData) {
 }
   `;
 
-    const [getCards, { loading, error, data }] = useLazyQuery(CARDS_QUERY, {
+    const [getCards, { loading, data }] = useLazyQuery(CARDS_QUERY, {
         variables: { slugs },
     });
 
@@ -66,7 +65,7 @@ export default function Cards(cardsData) {
             <main className="container">
 
                 <p style={{ color: 'white', margin: '8px 0 32px 0', fontWeight: 400 }}>
-                    Card details fetched from the URL slug in the address bar.
+                    Card information from the Card Query.
                 </p>
 
                 <section
@@ -80,23 +79,23 @@ export default function Cards(cardsData) {
                         <animated.div style={propsFadeIn}>
                             <div className="wrapper" style={{ display: 'flex' }}>
                                 {data.cards.map((card, ind) => (
-                                <>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', height: '150px', width: '220px', borderRadius: '4px', border: '1px solid white', margin: '8px' }} key={ind}>
-                                        <div>
-                                            <p className="small">First Name: {card.player.firstName}</p>
-                                            <p className="small">Last Name: {card.player.lastName}</p>
-                                            <p className="small">Age: {card.age}</p>
-                                            <p className="small">Position: {card.position}</p>
-                                            <p className="small">Rarity: {card.rarity}</p>
-                                            <p className="small">Shirt Number: {card.shirtNumber}</p>
+                                    <>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', height: '150px', width: '220px', borderRadius: '4px', border: '1px solid white', margin: '8px' }} key={ind}>
+                                            <div>
+                                                <p className="small">First Name: {card.player.firstName}</p>
+                                                <p className="small">Last Name: {card.player.lastName}</p>
+                                                <p className="small">Age: {card.age}</p>
+                                                <p className="small">Position: {card.position}</p>
+                                                <p className="small">Rarity: {card.rarity}</p>
+                                                <p className="small">Shirt Number: {card.shirtNumber}</p>
+                                            </div>
+                                            <img
+                                                style={{ width: '50px', height: '50px', margin: '8px' }}
+                                                src={card.player.activeClub.pictureUrl}
+                                                alt="card"
+                                            />
                                         </div>
-                                        <img
-                                            style={{ width: '50px', height: '50px', margin: '8px' }}
-                                            src={card.player.activeClub.pictureUrl}
-                                            alt="card"
-                                        />
-                                    </div>
-                                </>
+                                    </>
                                 ))}
                             </div>
                         </animated.div>
@@ -121,11 +120,10 @@ export default function Cards(cardsData) {
                                             }}
                                             alt="card"
                                         >
-                                            {/* run GQL query on click */}
                                             <p
                                                 onClick={() => {
                                                     getCards();
-                                                }}>Click Below to Reveal
+                                                }}>Click to Reveal
                                             </p>
                                         </div>
 

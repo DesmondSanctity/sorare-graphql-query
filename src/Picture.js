@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery, gql, useLazyQuery } from '@apollo/client';
+import React from 'react';
+import { useLazyQuery, gql } from '@apollo/client';
 import { Link, useLocation } from 'react-router-dom';
 import Cards from './Cards'
 import {
@@ -8,19 +8,19 @@ import {
 } from 'react-spring';
 
 export default function PictureCards() {
-    //access location object
+    //get the location/path/url
     const location = useLocation();
 
-    //access the slugs in the pathname
+    //get the slugs from the url
     const urlSlug = location.pathname.split('/')[2];
 
-    // split the string into an array of strings
-    const urlSlugArr = urlSlug.split(',');
+    // split the slugs into an array of strings
+    const slugs = urlSlug.split(',');
 
-    //create dynamic query which reads from pathname
+    //graphql query for PictureUrl
     const PICTUREURL = gql`
-    query getPictureUrl($urlSlugArr: [String!]) {
-      cards(slugs: $urlSlugArr) {
+    query getPictureUrl($slugs: [String!]) {
+      cards(slugs: $slugs) {
         pictureUrl
         name
       }
@@ -28,9 +28,8 @@ export default function PictureCards() {
   `;
 
     const [getPictureUrl, { loading, data }] = useLazyQuery(PICTUREURL, {
-        variables: { urlSlugArr },
+        variables: { slugs },
     });
-    const [cardsData, setCardsData] = useState(false)
 
     const propsFadeIn = useSpring({
         from: { opacity: 0 },
@@ -51,7 +50,7 @@ export default function PictureCards() {
                 <h1>Card Page</h1>
 
                 <p style={{ color: 'white', margin: '8px 0 32px 0', fontWeight: 400 }}>
-                    Card images fetched from the URL slug in the address bar.
+                    Profile images according to the slugs in the address bar.
                 </p>
 
                 <section
@@ -82,7 +81,7 @@ export default function PictureCards() {
                                 className={'wrapper'}
                                 style={{ display: 'flex' }}
                             >
-                                {urlSlugArr.map((card, ind) => (
+                                {slugs.map((card, ind) => (
                                     <div style={{ height: '400px' }} key={ind}>
                                         <div
                                             style={{
@@ -97,7 +96,6 @@ export default function PictureCards() {
                                             }}
                                             alt="card"
                                         >
-                                            <p>Click Below to Reveal</p>
                                         </div>
                                         <p className="small">{card.name}</p>
                                     </div>
@@ -117,9 +115,7 @@ export default function PictureCards() {
                             color: data ? 'black' : 'white',
                             border: data ? '1px solid black' : '1px solid white',
                         }}
-                        // run GQL query on click
                         onClick={() => {
-                            setCardsData(true)
                             getPictureUrl();
 
                         }}
@@ -128,7 +124,7 @@ export default function PictureCards() {
                     </button>
 
                     <Link style={{ margin: '32px' }} to="/">
-                        <button>Go Home</button>
+                        <button>Home</button>
                     </Link>
                 </div>
             </main>
