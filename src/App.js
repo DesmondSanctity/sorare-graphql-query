@@ -1,24 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { Routes, Route, Link } from 'react-router-dom';
+import PictureCards from './Picture';
+
+function Home() {
+  const [slugs, setSlugs] = useState(['']);
+  return (
+    <>
+      <main className="container">
+        <h1>Sorare Query</h1>
+
+        <p style={{ color: 'white', margin: '8px 0 32px 0', fontWeight: 400 }}>
+          Generate card or cards by inputting their slug(s) in the input box below
+        </p>
+
+        <div className="form-group">
+          <label className="form-label">Input your slug(s):</label><br></br>
+          <input type="text" className="form-input" placeholder="Enter slug..." value={slugs} onChange={e => { setSlugs(e.target.value) }} />
+        </div>
+
+        <Link
+          style={{ margin: '32px' }}
+          to={`/cards/${slugs}`}
+        >
+          <button>Go to cards page</button>
+        </Link>
+      </main>
+    </>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/cards/:slug" element={<PictureCards />} />
+      <Route path="/" element={<Home />} />
+    </Routes>
   );
 }
 
