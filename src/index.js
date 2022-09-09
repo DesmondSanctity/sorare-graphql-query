@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 //set up backend proxy
 const client = new ApolloClient({
-  uri: 'http://localhost:3005/graphql',
+  uri: 'https://api.sorare.com/graphql',
   cache: new InMemoryCache(),
 });
 
