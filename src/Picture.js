@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLazyQuery, gql } from '@apollo/client';
 import { Link, useLocation } from 'react-router-dom';
-import Cards from './Cards'
+import Card from './component/Card'
 import {
     useSpring,
     animated,
@@ -17,30 +17,51 @@ export default function PictureCards() {
     // split the slugs into an array of strings
     const slugs = urlSlug.split(',');
 
-    //graphql query for PictureUrl
-    const PICTUREURL = gql`
-    query getPictureUrl($slugs: [String!]) {
-      cards(slugs: $slugs) {
-        pictureUrl
-        name
-      }
+    //graphql query for Card
+    const CARDS_QUERY = gql`
+    query cards ($slugs: [String!]) {
+        cards(slugs: $slugs) {
+            name
+            age
+            position
+            rarity
+            createdAt
+            shirtNumber
+            slug
+            season {
+                name
+            }
+            player {
+                pictureUrl
+                firstName
+                lastName
+                activeClub{
+                    pictureUrl
+                }
+              country{
+                flagUrl
+                code
+                id
+              }
+            }
+        }
     }
   `;
 
-    const [getPictureUrl, { loading, data }] = useLazyQuery(PICTUREURL, {
+    const [getPictureUrl, { loading, data }] = useLazyQuery(CARDS_QUERY, {
         variables: { slugs },
     });
 
     const propsFadeIn = useSpring({
         from: { opacity: 0 },
         to: { opacity: 1 },
-        delay: 2000,
+        delay: 4000,
         config: { duration: 1000 },
     });
     const propsFadeOut = useSpring({
         from: { opacity: 1 },
         to: { opacity: 0 },
-        delay: 2000,
+        delay: 4000,
         config: { duration: 1000 },
     });
 
@@ -64,12 +85,8 @@ export default function PictureCards() {
                         <animated.div style={propsFadeIn}>
                             <div className="wrapper" style={{ display: 'flex' }}>
                                 {data.cards.map((card, ind) => (
-                                    <div style={{ height: '400px' }} key={ind}>
-                                        <img
-                                            style={{ width: '220px', margin: '8px' }}
-                                            src={card.pictureUrl}
-                                            alt="card"
-                                        />
+                                    <div style={{ height: '400px', margin: "10px" }} key={ind}>
+                                        <Card card={card} rarity={card.rarity} />
                                         <p className="small">{card.name}</p>
                                     </div>
                                 ))}
@@ -85,9 +102,9 @@ export default function PictureCards() {
                                     <div style={{ height: '400px' }} key={ind}>
                                         <div
                                             style={{
-                                                width: '220px',
-                                                height: '356px',
-                                                margin: '8px',
+                                                width: '320px',
+                                                height: '517px',
+                                                margin: '10px',
                                                 background: '#ed95f5',
                                                 borderRadius: '8px',
                                                 display: 'grid',
@@ -105,7 +122,7 @@ export default function PictureCards() {
                     )}
                 </section>
 
-                <Cards />
+                {/* <Cards /> */}
 
                 <div className="buttonGroup">
                     <button
