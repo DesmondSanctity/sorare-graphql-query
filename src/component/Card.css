@@ -27,10 +27,6 @@ h2 {
     position: relative;
 }
 
-.card-top-left {
-    /* border: 1px solid #fff; */
-}
-
 .card-top-left > p, .card-top-right > p {
     font-size: 15px;
     margin: 1px;
@@ -98,7 +94,6 @@ h2 {
 
 .card-info > div:nth-child(2) {
     flex-grow: 1;
-    /* border: 1px solid #fff */
 }
 
 
@@ -137,7 +132,6 @@ h2 {
     position: absolute;
     left: 0;
     right: 0;
-    /* opacity: 0.5; */
 }
 
 .card-player-img > img {
