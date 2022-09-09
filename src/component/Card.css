@@ -124,6 +124,7 @@ h2 {
 .country-logo > img {
     border-radius: 100%;
     width: 100%;
+    margin-top: 10px;
 }
 
 .card-player-img{
